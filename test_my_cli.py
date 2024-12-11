@@ -64,3 +64,56 @@ def test_list_by_priority(runner, clean_tasks_file):
     assert result.exit_code == 0
     # Verifica que la tarea de alta prioridad aparece primero
     assert result.output.index('High priority') < result.output.index('Low priority') 
+
+def test_sequence_of_operations(runner, clean_tasks_file):
+    """Prueba una secuencia específica de operaciones con tareas"""
+    # Añadir 4 tareas de ejemplo
+    tasks_to_add = [
+        ('Hacer compras', 2),
+        ('Llamar al médico', 3),
+        ('Pagar facturas', 1),
+        ('Preparar presentación', 4)
+    ]
+    
+    # Agregar las tareas
+    for description, priority in tasks_to_add:
+        result = runner.invoke(cli, ['add', description, '-p', str(priority)])
+        assert result.exit_code == 0
+        assert f"Tarea agregada: {description}" in result.output
+    
+    # Verificar que se agregaron las 4 tareas
+    result = runner.invoke(cli, ['list'])
+    assert result.exit_code == 0
+    for description, _ in tasks_to_add:
+        assert description in result.output
+    
+    # Eliminar la segunda tarea
+    result = runner.invoke(cli, ['delete', '2'])
+    assert result.exit_code == 0
+    assert "Tarea eliminada: Llamar al médico" in result.output
+    
+    # Verificar que la tarea se eliminó
+    result = runner.invoke(cli, ['list'])
+    assert "Llamar al médico" not in result.output
+    
+    # Marcar como completada la tercera tarea (que ahora es la segunda después de eliminar)
+    result = runner.invoke(cli, ['complete', '2'])
+    assert result.exit_code == 0
+    assert "Tarea completada: Pagar facturas" in result.output
+    
+    # Verificar que la tarea está marcada como completada
+    result = runner.invoke(cli, ['list'])
+    assert "[✓] Pagar facturas" in result.output
+    
+    # Eliminar la tercera tarea (que ahora es la segunda después de eliminar)
+    result = runner.invoke(cli, ['delete', '2'])
+    assert result.exit_code == 0
+    assert "Tarea eliminada: Pagar facturas" in result.output
+    
+    # Verificar el estado final
+    result = runner.invoke(cli, ['list'])
+    assert result.exit_code == 0
+    assert "Hacer compras" in result.output
+    assert "Preparar presentación" in result.output
+    assert "Llamar al médico" not in result.output
+    assert "Pagar facturas" not in result.output
