@@ -1,0 +1,47 @@
+Composer: 
+Escribe un programa en Python, usando click, que toma el comando "version" y devuelve la versión del intérprete de Python
+Commit
+
+Composer: 
+Escribe otro módulo que pruebe el funcionamiento correcto.
+
+Pongo docstring en my_cli.py:
+""" Sistema CLI de ToDo List 
+Este sistema es una herramienta CLI para gestionar una lista de tareas pendientes.
+Tiene los siguientes comandos:
+
+- add: Agrega una nueva tarea junto con su prioridad a la lista.
+- list: Muestra todas las tareas pendientes.
+    opción -p: Muestra las tareas ordenadas por prioridad.
+    opción -c: Muestra las tareas ordenadas por fecha de creación.
+- delete: Elimina una tarea existente de la lista.
+- complete: Marca una tarea como completada.
+"""
+
+Composer: 
+Actualiza el programa según el docstring del módulo
+Commit
+
+[memo] Cambios que quiero realizar:
+Que guarde en BDD
+Que la descripción de la tarea sea de muchas palabras
+Hay un error, al eliminar una tarea dice "tasks.pop(task_id - 1)" pero esto solo funcionará la primera vez
+Igual error para marcar como completada.
+
+Composer:
+Actualiza test_my_cli.py para asegurarte que las siguientes acciones se realizan correctamente:
+añadir 4 tareas de ejemplo.
+Eliminar la segunda tarea.
+Marcar como completada la tercera tarea.
+Eliminar la tercera tarea.
+Commit
+
+[memo] Veo que en cada prueba vuelve a crear la lista de tareas por 
+lo que sus "trampas" funcionan.
+
+Composer:
+Modifica este programa para que en lugar de guardar las tareas en un archivo JSON 
+las guarde en una base de datos sqlite.
+
+Composer:
+En las pruebas de eliminar o marcar como completada una tarea, no se está probando que la tarea esté en una posición diferente a la primera; podrías generalizar la prueba para que la tarea esté en cualquier lugar de la BDD?
