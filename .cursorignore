@@ -45,3 +45,12 @@ las guarde en una base de datos sqlite.
 
 Composer:
 En las pruebas de eliminar o marcar como completada una tarea, no se está probando que la tarea esté en una posición diferente a la primera; podrías generalizar la prueba para que la tarea esté en cualquier lugar de la BDD?
+Commit
+
+Composer:
+Recibo este error:
+_____________________________________ ERROR at teardown of test_add_task _____________________________________ 
+test_my_cli.py:32:  test_db_file.unlink()
+
+[memo] Pasa todas las pruebas.
+Commit

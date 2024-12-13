@@ -2,7 +2,7 @@ import pytest
 import sqlite3
 from pathlib import Path
 from click.testing import CliRunner
-from my_cli import cli, DB_FILE
+from my_cli import cli, init_db, DB_FILE
 from datetime import datetime
 
 @pytest.fixture
@@ -11,7 +11,7 @@ def runner():
     return CliRunner()
 
 @pytest.fixture
-def test_db():
+def test_db(monkeypatch):
     """Fixture que crea una base de datos temporal para pruebas"""
     # Usar una base de datos temporal para pruebas
     test_db_file = Path('test_tasks.db')
@@ -20,19 +20,17 @@ def test_db():
     if test_db_file.exists():
         test_db_file.unlink()
     
-    # Modificar la ruta de la base de datos para las pruebas
-    global DB_FILE
-    original_db = DB_FILE
-    DB_FILE = test_db_file
+    # Usar monkeypatch para modificar la ruta de la base de datos
+    monkeypatch.setattr('my_cli.DB_FILE', test_db_file)
+    
+    # Inicializar la base de datos de prueba
+    init_db()
     
     yield test_db_file
     
     # Limpiar después de las pruebas
     if test_db_file.exists():
         test_db_file.unlink()
-    
-    # Restaurar la ruta original
-    DB_FILE = original_db
 
 def test_add_task(runner, test_db):
     """Prueba la funcionalidad de agregar tareas"""
